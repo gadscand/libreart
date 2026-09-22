@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Libreart is an independent art archive for human-made work.">
+    <title>Libreart - art made by people</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="Libreart home"><span class="wordmark-mark">L</span> libreart</a>
+      <nav aria-label="Primary navigation">
+        <a href="#archive" data-i18n="navArchive">Archive</a>
+        <a href="#about" data-i18n="navAbout">About</a>
+        <a class="nav-submit" href="#submit" data-i18n="navSubmit">Submit work <span aria-hidden="true">↗</span></a>
+      </nav>
+      <div class="languages" aria-label="Language selector">
+        <button type="button" class="language is-active" data-language="en">EN</button>
+        <button type="button" class="language" data-language="pt">PT</button>
+        <button type="button" class="language" data-language="es">ES</button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow" data-i18n="eyebrow">Independent art archive</p>
+        <h1 id="hero-title">Made by hand.<br><em>Shared freely.</em></h1>
+        <div class="hero-foot">
+          <p data-i18n="heroDescription">A growing home for sketches, experiments, and finished work by independent artists.</p>
+          <a class="text-link" href="#archive"><span data-i18n="explore">Explore the archive</span> <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+
+      <section class="archive" id="archive" aria-labelledby="archive-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow" data-i18n="collection">The collection</p>
+            <h2 id="archive-title" data-i18n="recentWork">Recent work</h2>
+          </div>
+          <p class="archive-note" data-i18n="archiveNote">No generators.<br>Only original work.</p>
+        </div>
+        <div class="filters" role="group" aria-label="Filter artwork by category">
+          <button class="filter is-active" type="button" data-filter="All" data-i18n="allWork">All work</button>
+          <button class="filter" type="button" data-filter="Sketchbook" data-i18n="Sketchbook">Sketchbook</button>
+          <button class="filter" type="button" data-filter="Painting" data-i18n="Painting">Painting</button>
+          <button class="filter" type="button" data-filter="Digital" data-i18n="Digital">Digital</button>
+          <button class="filter" type="button" data-filter="Photography" data-i18n="Photography">Photography</button>
+        </div>
+        <div class="art-grid" id="art-grid">
+          <%= for artwork <- @artworks do %>
+            <article class="art-card" data-category="<%= artwork["category"] %>">
+              <div class="art-image-wrap">
+                <img class="art-image" src="<%= artwork["image"] %>" alt="<%= artwork["title"] %> by <%= artwork["artist"] %>" loading="lazy">
+                <span class="art-index" aria-hidden="true">0<%= Enum.find_index(@artworks, &(&1 == artwork)) + 1 %></span>
+              </div>
+              <div class="art-meta">
+                <div>
+                  <h3><%= artwork["title"] %></h3>
+                  <p><%= artwork["artist"] %></p>
+                </div>
+                <span class="art-year"><%= artwork["year"] %></span>
+              </div>
+              <p class="art-description"><%= artwork["description"] %></p>
+            </article>
+          <% end %>
+        </div>
+        <p class="empty-state" id="empty-state"<%= if @artworks != [], do: " hidden" %> data-i18n="emptyState">No work in this category yet.</p>
+      </section>
+
+      <section class="manifesto" id="about" aria-labelledby="manifesto-title">
+        <p class="eyebrow" data-i18n="manifestoLabel">Our small manifesto</p>
+        <h2 id="manifesto-title">The unfinished, the personal,<br><em>the unmistakably human.</em></h2>
+        <p class="manifesto-copy" data-i18n="manifestoCopy">Libreart exists to give independent artists a quiet, public place to be seen. Every piece is made by a person. AI-generated images are not accepted.</p>
+        <p class="manifesto-affiliation" data-i18n="affiliation">Libreart is currently presented by Human Thinkers Group (HTG), linked to G A D Solution C.</p>
+      </section>
+
+      <section class="submit-section" id="submit" aria-labelledby="submit-title">
+        <div class="submit-intro">
+          <p class="eyebrow" data-i18n="submitLabel">Add to the archive</p>
+          <h2 id="submit-title">Show us what<br><em>you are making.</em></h2>
+          <p data-i18n="submitIntro">Upload your image to Pasteboard first. Then prepare an Issue for the Libreart repository.</p>
+        </div>
+        <form class="submit-form" id="submission-form">
+          <label><span data-i18n="artistName">Artist name</span> <input name="artist" type="text" placeholder="Your name" data-i18n-placeholder="artistPlaceholder" required></label>
+          <label><span data-i18n="workTitle">Work title</span> <input name="title" type="text" placeholder="Name this piece" data-i18n-placeholder="titlePlaceholder" required></label>
+          <label><span data-i18n="category">Category</span>
+            <select name="category" required>
+              <option value="" disabled selected data-i18n="chooseOne">Choose one</option>
+              <option value="Sketchbook" data-i18n="Sketchbook">Sketchbook</option><option value="Painting" data-i18n="Painting">Painting</option><option value="Digital" data-i18n="Digital">Digital</option><option value="Photography" data-i18n="Photography">Photography</option><option value="Other" data-i18n="Other">Other</option>
+            </select>
+          </label>
+          <label><span data-i18n="imageLink">Pasteboard image link</span> <input name="imageUrl" type="url" placeholder="https://pasteboard.co/..." data-i18n-placeholder="imageLinkPlaceholder" required></label>
+          <label class="wide"><span data-i18n="aFewWords">A few words</span> <textarea name="description" rows="3" placeholder="What should people know about this work?" data-i18n-placeholder="descriptionPlaceholder"></textarea></label>
+          <div class="form-actions wide">
+            <p class="form-note" data-i18n="formNote">By submitting, you confirm that this work follows the archive's authorship and transparency guidelines.</p>
+            <button class="submit-button" type="submit" data-i18n="prepareSubmission">Prepare submission <span aria-hidden="true">↗</span></button>
+          </div>
+          <p class="form-status wide" id="form-status" role="status"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="wordmark" href="#top"><span class="wordmark-mark">L</span> libreart</a>
+      <p data-i18n="footerDescription">Independent work, shared openly.</p>
+      <p class="footer-right" data-i18n="footerNote">Human creativity, shared openly.</p>
+    </footer>
+    <script src="assets/app.js" defer></script>
+  </body>
+</html>
